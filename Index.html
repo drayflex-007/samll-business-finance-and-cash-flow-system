@@ -3,296 +3,1983 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Small Business Finance & Cash-Flow System | Nexora Technologies</title>
-<meta name="description" content="A beginner-friendly guide that teaches small business owners the 5-step system to track, forecast, and control cash flow — no accounting background required.">
+
+<meta name="description"
+content="A practical small-business finance system for tracking income, expenses, cash flow, profitability, and financial performance.">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap"
+rel="stylesheet">
+
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- ============ HEADER ============ -->
+<!-- =========================================================
+     HEADER / NEXORA BRAND
+========================================================= -->
+
 <header class="site-header">
+
   <div class="wrap header-inner">
-    <span class="brand-mark">Nexora Technologies</span>
-    <a class="header-cta" href="#pricing">Get the guide</a>
+
+    <a href="#" class="nexora-brand" aria-label="Nexora Technologies">
+
+      <div class="nexora-logo-mark" aria-hidden="true">
+        N
+      </div>
+
+      <div class="nexora-brand-name">
+        <span>Nexora</span>
+        <small>Technologies</small>
+      </div>
+
+    </a>
+
+    <a href="#pricing" class="header-cta">
+      Get the System
+    </a>
+
   </div>
+
 </header>
 
-<!-- ============ HERO ============ -->
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
 <section class="hero">
+
   <div class="wrap hero-inner">
+
     <div class="hero-copy">
-      <h1>Your business is profitable. So why does your bank account say otherwise?</h1>
-      <p class="hero-sub">The Small Business Finance &amp; Cash-Flow System teaches you the exact 5-step method to track, forecast, and control your cash — in plain English, with no accounting background required.</p>
+
+      <div class="eyebrow">
+        SMALL BUSINESS FINANCE SYSTEM
+      </div>
+
+      <h1>
+        Know where your money is going.
+        Know where your business is going.
+      </h1>
+
+      <p class="hero-sub">
+        The Small Business Finance &amp; Cash-Flow System helps you track
+        income, control expenses, monitor cash flow, calculate profitability,
+        and understand your business financial performance — all in one
+        practical system.
+      </p>
+
       <div class="hero-actions">
-        <a href="#pricing" class="btn btn-primary">Get the System — $19</a>
-        <a href="#inside" class="btn btn-ghost">See what's inside</a>
+
+        <a href="#finance-system" class="btn btn-primary">
+          Explore the Finance System
+        </a>
+
+        <a href="#inside" class="btn btn-ghost">
+          See What's Inside
+        </a>
+
       </div>
-      <p class="hero-note">Instant digital download. Read it in an evening, use it for years.</p>
+
+      <p class="hero-note">
+        Built for small-business owners, freelancers, entrepreneurs,
+        and growing businesses.
+      </p>
+
     </div>
-    <div class="hero-visual" aria-hidden="true">
-      <div class="ledger-card">
-        <div class="ledger-title">4-Week Cash Flow Forecast</div>
-        <div class="ledger-row ledger-head">
-          <span>Period</span><span>Opening</span><span>In</span><span>Out</span><span>Closing</span>
+
+
+    <!-- HERO DASHBOARD PREVIEW -->
+
+    <div class="hero-visual">
+
+      <div class="dashboard-preview">
+
+        <div class="dashboard-preview-header">
+
+          <div>
+            <span class="preview-label">FINANCIAL OVERVIEW</span>
+            <strong>Business Dashboard</strong>
+          </div>
+
+          <span class="preview-period">
+            This Month
+          </span>
+
         </div>
-        <div class="ledger-row"><span>Week 1</span><span>$3,200</span><span>$4,500</span><span>$3,900</span><span>$3,800</span></div>
-        <div class="ledger-row ledger-flag"><span>Week 2</span><span>$3,800</span><span>$2,100</span><span>$4,300</span><span>$1,600</span></div>
-        <div class="ledger-row"><span>Week 3</span><span>$1,600</span><span>$6,000</span><span>$3,700</span><span>$3,900</span></div>
-        <div class="ledger-row"><span>Week 4</span><span>$3,900</span><span>$3,000</span><span>$3,850</span><span>$3,050</span></div>
-        <div class="ledger-caption">Sample data — the dip in Week 2 is exactly what this system helps you see coming.</div>
+
+
+        <div class="preview-kpis">
+
+          <div class="preview-kpi">
+            <span>Total Income</span>
+            <strong id="preview-income">$12,450</strong>
+          </div>
+
+          <div class="preview-kpi">
+            <span>Total Expenses</span>
+            <strong id="preview-expenses">$6,280</strong>
+          </div>
+
+          <div class="preview-kpi">
+            <span>Net Cash Flow</span>
+            <strong id="preview-cashflow">$6,170</strong>
+          </div>
+
+          <div class="preview-kpi">
+            <span>Net Profit</span>
+            <strong id="preview-profit">$5,420</strong>
+          </div>
+
+        </div>
+
+
+        <div class="preview-chart">
+
+          <div class="chart-heading">
+            <strong>Income vs Expenses</strong>
+            <span>Monthly Performance</span>
+          </div>
+
+          <div class="chart-bars">
+
+            <div class="bar-group">
+              <div class="bar income-bar" style="height:78%;"></div>
+              <div class="bar expense-bar" style="height:45%;"></div>
+              <span>Jan</span>
+            </div>
+
+            <div class="bar-group">
+              <div class="bar income-bar" style="height:64%;"></div>
+              <div class="bar expense-bar" style="height:39%;"></div>
+              <span>Feb</span>
+            </div>
+
+            <div class="bar-group">
+              <div class="bar income-bar" style="height:84%;"></div>
+              <div class="bar expense-bar" style="height:48%;"></div>
+              <span>Mar</span>
+            </div>
+
+            <div class="bar-group">
+              <div class="bar income-bar" style="height:91%;"></div>
+              <div class="bar expense-bar" style="height:52%;"></div>
+              <span>Apr</span>
+            </div>
+
+            <div class="bar-group">
+              <div class="bar income-bar" style="height:76%;"></div>
+              <div class="bar expense-bar" style="height:42%;"></div>
+              <span>May</span>
+            </div>
+
+          </div>
+
+          <div class="chart-legend">
+
+            <span>
+              <i class="legend-income"></i>
+              Income
+            </span>
+
+            <span>
+              <i class="legend-expense"></i>
+              Expenses
+            </span>
+
+          </div>
+
+        </div>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
 
-<!-- ============ PROBLEM ============ -->
+
+<!-- =========================================================
+     QUICK VALUE STRIP
+========================================================= -->
+
+<section class="value-strip">
+
+  <div class="wrap value-strip-grid">
+
+    <div>
+      <strong>Track</strong>
+      <span>Income &amp; expenses</span>
+    </div>
+
+    <div>
+      <strong>Monitor</strong>
+      <span>Cash flow</span>
+    </div>
+
+    <div>
+      <strong>Calculate</strong>
+      <span>Profitability</span>
+    </div>
+
+    <div>
+      <strong>Understand</strong>
+      <span>Business performance</span>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     INTERACTIVE FINANCE SYSTEM
+========================================================= -->
+
+<section class="section finance-system" id="finance-system">
+
+  <div class="wrap">
+
+    <div class="system-heading">
+
+      <div>
+
+        <div class="eyebrow">
+          YOUR BUSINESS FINANCE CENTER
+        </div>
+
+        <h2>
+          One system for your everyday financial decisions.
+        </h2>
+
+        <p class="section-sub">
+          Enter your business figures and use the dashboard to understand
+          income, expenses, cash flow, profitability, and financial
+          performance.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- DASHBOARD -->
+
+    <div class="finance-dashboard">
+
+      <div class="dashboard-top">
+
+        <div class="dashboard-title">
+
+          <span>FINANCIAL DASHBOARD</span>
+
+          <h3>
+            Business Financial Overview
+          </h3>
+
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="reset-data">
+          Reset Data
+        </button>
+
+      </div>
+
+
+      <!-- KPI CARDS -->
+
+      <div class="kpi-grid">
+
+        <div class="kpi-card">
+
+          <span class="kpi-label">
+            Total Income
+          </span>
+
+          <strong id="total-income">
+            $0.00
+          </strong>
+
+          <small>
+            Money received
+          </small>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+          <span class="kpi-label">
+            Total Expenses
+          </span>
+
+          <strong id="total-expenses">
+            $0.00
+          </strong>
+
+          <small>
+            Money spent
+          </small>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+          <span class="kpi-label">
+            Net Cash Flow
+          </span>
+
+          <strong id="net-cash-flow">
+            $0.00
+          </strong>
+
+          <small>
+            Income minus expenses
+          </small>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+          <span class="kpi-label">
+            Net Profit
+          </span>
+
+          <strong id="net-profit">
+            $0.00
+          </strong>
+
+          <small>
+            Estimated profitability
+          </small>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+          <span class="kpi-label">
+            Profit Margin
+          </span>
+
+          <strong id="profit-margin">
+            0%
+          </strong>
+
+          <small>
+            Profitability ratio
+          </small>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+          <span class="kpi-label">
+            Expense Ratio
+          </span>
+
+          <strong id="expense-ratio">
+            0%
+          </strong>
+
+          <small>
+            Expenses vs income
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- FINANCIAL TOOLS -->
+
+      <div class="finance-tools-grid">
+
+
+        <!-- INCOME TRACKER -->
+
+        <div class="finance-tool-card">
+
+          <div class="tool-header">
+
+            <div>
+
+              <span class="tool-number">
+                01
+              </span>
+
+              <h3>
+                Income Tracker
+              </h3>
+
+            </div>
+
+          </div>
+
+          <p>
+            Record money received from customers, clients,
+            sales, services, or other income sources.
+          </p>
+
+
+          <form id="income-form" class="finance-form">
+
+            <div class="form-row">
+
+              <div class="form-group">
+
+                <label for="income-date">
+                  Date
+                </label>
+
+                <input
+                  type="date"
+                  id="income-date"
+                  required>
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="income-category">
+                  Category
+                </label>
+
+                <select id="income-category" required>
+
+                  <option value="">
+                    Select category
+                  </option>
+
+                  <option value="Sales">
+                    Sales
+                  </option>
+
+                  <option value="Services">
+                    Services
+                  </option>
+
+                  <option value="Consulting">
+                    Consulting
+                  </option>
+
+                  <option value="Other Income">
+                    Other Income
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="income-description">
+                Description
+              </label>
+
+              <input
+                type="text"
+                id="income-description"
+                placeholder="e.g. Website project payment"
+                required>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="income-amount">
+                Amount
+              </label>
+
+              <input
+                type="number"
+                id="income-amount"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                required>
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="btn btn-primary">
+              Add Income
+            </button>
+
+          </form>
+
+
+          <div class="transaction-summary">
+
+            <span>
+              Recorded Income
+            </span>
+
+            <strong id="income-total">
+              $0.00
+            </strong>
+
+          </div>
+
+
+          <div
+            class="transaction-list"
+            id="income-list">
+
+          </div>
+
+        </div>
+
+
+        <!-- EXPENSE TRACKER -->
+
+        <div class="finance-tool-card">
+
+          <div class="tool-header">
+
+            <div>
+
+              <span class="tool-number">
+                02
+              </span>
+
+              <h3>
+                Expense Tracker
+              </h3>
+
+            </div>
+
+          </div>
+
+          <p>
+            Track operating expenses and understand where
+            your business money is being spent.
+          </p>
+
+
+          <form id="expense-form" class="finance-form">
+
+            <div class="form-row">
+
+              <div class="form-group">
+
+                <label for="expense-date">
+                  Date
+                </label>
+
+                <input
+                  type="date"
+                  id="expense-date"
+                  required>
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="expense-category">
+                  Category
+                </label>
+
+                <select id="expense-category" required>
+
+                  <option value="">
+                    Select category
+                  </option>
+
+                  <option value="Operations">
+                    Operations
+                  </option>
+
+                  <option value="Marketing">
+                    Marketing
+                  </option>
+
+                  <option value="Payroll">
+                    Payroll
+                  </option>
+
+                  <option value="Equipment">
+                    Equipment
+                  </option>
+
+                  <option value="Transport">
+                    Transport
+                  </option>
+
+                  <option value="Utilities">
+                    Utilities
+                  </option>
+
+                  <option value="Other Expense">
+                    Other Expense
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="expense-description">
+                Description
+              </label>
+
+              <input
+                type="text"
+                id="expense-description"
+                placeholder="e.g. Internet subscription"
+                required>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="expense-amount">
+                Amount
+              </label>
+
+              <input
+                type="number"
+                id="expense-amount"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                required>
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="btn btn-primary">
+              Add Expense
+            </button>
+
+          </form>
+
+
+          <div class="transaction-summary">
+
+            <span>
+              Recorded Expenses
+            </span>
+
+            <strong id="expense-total">
+              $0.00
+            </strong>
+
+          </div>
+
+
+          <div
+            class="transaction-list"
+            id="expense-list">
+
+          </div>
+
+        </div>
+
+
+        <!-- CASH FLOW TRACKER -->
+
+        <div class="finance-tool-card">
+
+          <div class="tool-header">
+
+            <div>
+
+              <span class="tool-number">
+                03
+              </span>
+
+              <h3>
+                Cash-Flow Tracker
+              </h3>
+
+            </div>
+
+          </div>
+
+          <p>
+            See whether money is flowing into or out of your
+            business and monitor your current cash position.
+          </p>
+
+
+          <div class="cash-flow-input">
+
+            <div class="form-group">
+
+              <label for="opening-cash">
+                Opening Cash Balance
+              </label>
+
+              <input
+                type="number"
+                id="opening-cash"
+                min="0"
+                step="0.01"
+                placeholder="0.00">
+
+            </div>
+
+          </div>
+
+
+          <div class="cash-flow-results">
+
+            <div>
+
+              <span>
+                Opening Cash
+              </span>
+
+              <strong id="cash-opening">
+                $0.00
+              </strong>
+
+            </div>
+
+            <div>
+
+              <span>
+                Net Cash Flow
+              </span>
+
+              <strong id="cash-net">
+                $0.00
+              </strong>
+
+            </div>
+
+            <div>
+
+              <span>
+                Closing Cash
+              </span>
+
+              <strong id="cash-closing">
+                $0.00
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="cash-status" id="cash-status">
+            Add your transactions to see your cash position.
+          </div>
+
+        </div>
+
+
+        <!-- PROFITABILITY CALCULATOR -->
+
+        <div class="finance-tool-card">
+
+          <div class="tool-header">
+
+            <div>
+
+              <span class="tool-number">
+                04
+              </span>
+
+              <h3>
+                Profitability Calculator
+              </h3>
+
+            </div>
+
+          </div>
+
+          <p>
+            Estimate gross and net profitability using your
+            business revenue and costs.
+          </p>
+
+
+          <div class="calculator-fields">
+
+            <div class="form-group">
+
+              <label for="profit-revenue">
+                Revenue
+              </label>
+
+              <input
+                type="number"
+                id="profit-revenue"
+                min="0"
+                step="0.01"
+                placeholder="0.00">
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="profit-direct-cost">
+                Direct Costs
+              </label>
+
+              <input
+                type="number"
+                id="profit-direct-cost"
+                min="0"
+                step="0.01"
+                placeholder="0.00">
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="profit-operating-cost">
+                Operating Expenses
+              </label>
+
+              <input
+                type="number"
+                id="profit-operating-cost"
+                min="0"
+                step="0.01"
+                placeholder="0.00">
+
+            </div>
+
+          </div>
+
+
+          <div class="profit-results">
+
+            <div>
+
+              <span>
+                Gross Profit
+              </span>
+
+              <strong id="gross-profit">
+                $0.00
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Net Profit
+              </span>
+
+              <strong id="calculator-net-profit">
+                $0.00
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Profit Margin
+              </span>
+
+              <strong id="calculator-profit-margin">
+                0%
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- FINANCIAL PERFORMANCE -->
+
+        <div class="finance-tool-card performance-card">
+
+          <div class="tool-header">
+
+            <div>
+
+              <span class="tool-number">
+                05
+              </span>
+
+              <h3>
+                Financial Performance
+              </h3>
+
+            </div>
+
+          </div>
+
+          <p>
+            Use your numbers to understand the financial
+            condition of the business at a glance.
+          </p>
+
+
+          <div class="performance-grid">
+
+            <div class="performance-item">
+
+              <span>
+                Revenue
+              </span>
+
+              <strong id="performance-revenue">
+                $0.00
+              </strong>
+
+            </div>
+
+
+            <div class="performance-item">
+
+              <span>
+                Expenses
+              </span>
+
+              <strong id="performance-expenses">
+                $0.00
+              </strong>
+
+            </div>
+
+
+            <div class="performance-item">
+
+              <span>
+                Profit
+              </span>
+
+              <strong id="performance-profit">
+                $0.00
+              </strong>
+
+            </div>
+
+
+            <div class="performance-item">
+
+              <span>
+                Margin
+              </span>
+
+              <strong id="performance-margin">
+                0%
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="performance-message" id="performance-message">
+            Add financial data to generate your performance summary.
+          </div>
+
+        </div>
+
+
+        <!-- FINANCIAL CHART -->
+
+        <div class="finance-tool-card chart-card">
+
+          <div class="tool-header">
+
+            <div>
+
+              <span class="tool-number">
+                06
+              </span>
+
+              <h3>
+                Income vs Expenses
+              </h3>
+
+            </div>
+
+          </div>
+
+          <div class="interactive-chart">
+
+            <div class="chart-axis">
+
+              <span>Income</span>
+              <span>Expenses</span>
+
+            </div>
+
+            <div class="chart-visual">
+
+              <div
+                class="dynamic-bar income-dynamic"
+                id="income-chart-bar">
+              </div>
+
+              <div
+                class="dynamic-bar expense-dynamic"
+                id="expense-chart-bar">
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="chart-values">
+
+            <span>
+              Income:
+              <strong id="chart-income">
+                $0.00
+              </strong>
+            </span>
+
+            <span>
+              Expenses:
+              <strong id="chart-expenses">
+                $0.00
+              </strong>
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     PROBLEM
+========================================================= -->
+
 <section class="section problem">
+
   <div class="wrap narrow">
-    <h2>If any of this sounds familiar, you're not alone.</h2>
-    <ul class="problem-list">
-      <li>You check your bank balance before agreeing to almost any purchase, even small ones.</li>
-      <li>A big invoice finally clears, and somehow the money is gone within a week.</li>
-      <li>You've had a month that looked "profitable" and still felt like a scramble to cover payroll.</li>
-      <li>You've never forecasted your cash more than a few days into the future.</li>
-      <li>Tax season is the only time anyone looks closely at your numbers.</li>
-    </ul>
-    <p class="problem-close">None of this means you're bad with money. It means you've never had a system — most business owners weren't taught one, and the ones who figure it out on their own usually do it the hard way.</p>
-  </div>
-</section>
 
-<!-- ============ TRANSFORMATION ============ -->
-<section class="section transformation">
-  <div class="wrap">
-    <h2>What changes once you have the system</h2>
-    <div class="compare">
-      <div class="compare-col compare-before">
-        <div class="compare-label">Without a system</div>
-        <ul>
-          <li>Cash surprises show up the week they happen, not before</li>
-          <li>Pricing is a guess based on what feels fair</li>
-          <li>Bookkeeping happens once a year, under deadline pressure</li>
-          <li>A slow month means scrambling or borrowing</li>
-          <li>"How's the business doing?" is answered by a feeling, not a number</li>
-        </ul>
-      </div>
-      <div class="compare-col compare-after">
-        <div class="compare-label">With the Cash-Flow System</div>
-        <ul>
-          <li>You see a cash dip 3-13 weeks before it happens</li>
-          <li>Pricing is set from margin, not guesswork</li>
-          <li>A 15-minute weekly check-in keeps your books current</li>
-          <li>A reserve you built on purpose absorbs the slow months</li>
-          <li>"How's the business doing?" is answered with a forecast</li>
-        </ul>
-      </div>
+    <div class="eyebrow">
+      THE PROBLEM
     </div>
+
+    <h2>
+      Your business can be profitable and still run out of cash.
+    </h2>
+
+    <ul class="problem-list">
+
+      <li>
+        You check your bank balance before agreeing to almost any purchase.
+      </li>
+
+      <li>
+        A large payment arrives and somehow the money disappears within days.
+      </li>
+
+      <li>
+        Your business looks profitable but paying bills still feels stressful.
+      </li>
+
+      <li>
+        You don't know what your cash position will look like next month.
+      </li>
+
+      <li>
+        You only look closely at your numbers when something goes wrong.
+      </li>
+
+    </ul>
+
+    <p class="problem-close">
+      The answer isn't necessarily more complicated accounting.
+      It's having a simple financial system you can actually use.
+    </p>
+
   </div>
+
 </section>
 
-<!-- ============ WHAT'S INSIDE ============ -->
-<section class="section inside" id="inside">
+
+<!-- =========================================================
+     TRANSFORMATION
+========================================================= -->
+
+<section class="section transformation">
+
   <div class="wrap">
-    <h2>What's inside</h2>
-    <p class="section-sub">15 chapters, organized into five short modules. Written for someone who has never kept a formal set of books.</p>
+
+    <div class="eyebrow light">
+      FROM GUESSWORK TO VISIBILITY
+    </div>
+
+    <h2>
+      What changes when your numbers are organized.
+    </h2>
+
+    <div class="compare">
+
+      <div class="compare-col compare-before">
+
+        <div class="compare-label">
+          Without a system
+        </div>
+
+        <ul>
+
+          <li>
+            Cash surprises show up when they happen.
+          </li>
+
+          <li>
+            Expenses are difficult to categorize.
+          </li>
+
+          <li>
+            Profitability is based on assumptions.
+          </li>
+
+          <li>
+            Financial performance is difficult to measure.
+          </li>
+
+          <li>
+            Business decisions are made without a clear picture.
+          </li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="compare-col compare-after">
+
+        <div class="compare-label">
+          With the Finance System
+        </div>
+
+        <ul>
+
+          <li>
+            Income and expenses are recorded in one place.
+          </li>
+
+          <li>
+            Cash flow becomes easier to understand.
+          </li>
+
+          <li>
+            Profit and margins can be calculated quickly.
+          </li>
+
+          <li>
+            Key financial indicators are visible on the dashboard.
+          </li>
+
+          <li>
+            You can make decisions using current business numbers.
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     WHAT'S INSIDE
+========================================================= -->
+
+<section class="section inside" id="inside">
+
+  <div class="wrap">
+
+    <div class="eyebrow">
+      WHAT'S INSIDE
+    </div>
+
+    <h2>
+      More than a guide. A practical financial toolkit.
+    </h2>
+
+    <p class="section-sub">
+      Learn the principles and use the tools to put them into practice.
+    </p>
+
 
     <div class="modules">
+
+
       <div class="module">
-        <div class="module-num">01</div>
+
+        <div class="module-num">
+          01
+        </div>
+
         <div class="module-body">
-          <h3>Foundations</h3>
-          <p class="module-desc">Why profit and cash flow aren't the same thing, and the core terms you'll actually use.</p>
+
+          <h3>
+            Financial Foundations
+          </h3>
+
+          <p class="module-desc">
+            Understand the numbers that matter to your business.
+          </p>
+
           <ol>
-            <li>Welcome: How to Use This Guide</li>
-            <li>Why Cash Flow Matters More Than Profit</li>
-            <li>Core Financial Terms Every Beginner Should Know</li>
+
+            <li>
+              Understanding income and expenses
+            </li>
+
+            <li>
+              Profit vs cash flow
+            </li>
+
+            <li>
+              Essential financial terms
+            </li>
+
           </ol>
+
         </div>
+
       </div>
+
+
       <div class="module">
-        <div class="module-num">02</div>
-        <div class="module-body">
-          <h3>Setup</h3>
-          <p class="module-desc">A one-afternoon setup that makes every later step easier.</p>
-          <ol start="4">
-            <li>Setting Up Your Financial Foundation</li>
-            <li>Understanding the Three Types of Cash Flow</li>
-          </ol>
+
+        <div class="module-num">
+          02
         </div>
+
+        <div class="module-body">
+
+          <h3>
+            Income &amp; Expense Tracking
+          </h3>
+
+          <p class="module-desc">
+            Record financial activity and understand where money comes from
+            and where it goes.
+          </p>
+
+          <ol>
+
+            <li>
+              Income tracking
+            </li>
+
+            <li>
+              Expense categorization
+            </li>
+
+            <li>
+              Transaction management
+            </li>
+
+          </ol>
+
+        </div>
+
       </div>
+
+
       <div class="module">
-        <div class="module-num">03</div>
-        <div class="module-body">
-          <h3>The System</h3>
-          <p class="module-desc">The core framework — and a worked forecast example you can copy directly.</p>
-          <ol start="6">
-            <li>The 5-Step Cash-Flow System</li>
-            <li>Building Your Cash Flow Forecast</li>
-          </ol>
+
+        <div class="module-num">
+          03
         </div>
+
+        <div class="module-body">
+
+          <h3>
+            Cash-Flow Management
+          </h3>
+
+          <p class="module-desc">
+            Monitor money coming into and leaving your business.
+          </p>
+
+          <ol>
+
+            <li>
+              Cash-flow tracking
+            </li>
+
+            <li>
+              Opening and closing balances
+            </li>
+
+            <li>
+              Net cash-flow calculation
+            </li>
+
+          </ol>
+
+        </div>
+
       </div>
+
+
       <div class="module">
-        <div class="module-num">04</div>
-        <div class="module-body">
-          <h3>Execution</h3>
-          <p class="module-desc">Putting the system to work on expenses, pricing, collections, and reserves.</p>
-          <ol start="8">
-            <li>Managing Expenses Without Slowing Down Growth</li>
-            <li>Pricing for Profit and Positive Cash Flow</li>
-            <li>Getting Paid Faster: Invoicing &amp; Collections</li>
-            <li>Building a Cash Reserve</li>
-          </ol>
+
+        <div class="module-num">
+          04
         </div>
+
+        <div class="module-body">
+
+          <h3>
+            Profitability
+          </h3>
+
+          <p class="module-desc">
+            Understand gross profit, net profit, and profit margins.
+          </p>
+
+          <ol>
+
+            <li>
+              Revenue
+            </li>
+
+            <li>
+              Direct costs
+            </li>
+
+            <li>
+              Operating expenses
+            </li>
+
+            <li>
+              Profit margin
+            </li>
+
+          </ol>
+
+        </div>
+
       </div>
+
+
       <div class="module">
-        <div class="module-num">05</div>
-        <div class="module-body">
-          <h3>Maintenance</h3>
-          <p class="module-desc">The routine and reference material that keep the system running on its own.</p>
-          <ol start="12">
-            <li>Monthly Financial Health Check-In</li>
-            <li>10 Common Cash Flow Mistakes and How to Avoid Them</li>
-            <li>Quick-Reference Glossary</li>
-            <li>Closing Notes</li>
-          </ol>
+
+        <div class="module-num">
+          05
         </div>
+
+        <div class="module-body">
+
+          <h3>
+            Financial Performance Dashboard
+          </h3>
+
+          <p class="module-desc">
+            See the most important financial indicators in one place.
+          </p>
+
+          <ol>
+
+            <li>
+              Income and expense overview
+            </li>
+
+            <li>
+              Net cash flow
+            </li>
+
+            <li>
+              Profitability
+            </li>
+
+            <li>
+              Expense ratio
+            </li>
+
+            <li>
+              Financial performance summary
+            </li>
+
+          </ol>
+
+        </div>
+
       </div>
+
+
     </div>
+
   </div>
+
 </section>
 
-<!-- ============ WHO IT'S FOR ============ -->
+
+<!-- =========================================================
+     WHO IT'S FOR
+========================================================= -->
+
 <section class="section audience">
+
   <div class="wrap">
-    <h2>Who this is for</h2>
+
+    <div class="eyebrow">
+      WHO IT'S FOR
+    </div>
+
+    <h2>
+      Built for people who run businesses — not accounting departments.
+    </h2>
+
     <div class="audience-grid">
+
       <div class="audience-col">
-        <h3>Built for you if:</h3>
+
+        <h3>
+          Built for you if:
+        </h3>
+
         <ul class="check-list">
-          <li>You're a freelancer, solo founder, or service business owner managing your own books</li>
-          <li>You've never kept a formal cash flow forecast before</li>
-          <li>You want a plain-English system, not an accounting textbook</li>
-          <li>You'd rather spend an hour a week than a full weekend once a year</li>
-          <li>You're profitable on paper but still feel unsure about cash</li>
+
+          <li>
+            You're a freelancer, entrepreneur, or small-business owner.
+          </li>
+
+          <li>
+            You want a simple way to track business finances.
+          </li>
+
+          <li>
+            You want to understand cash flow without complicated accounting software.
+          </li>
+
+          <li>
+            You want to calculate profitability.
+          </li>
+
+          <li>
+            You want clearer financial information before making decisions.
+          </li>
+
         </ul>
+
       </div>
+
+
       <div class="audience-col">
-        <h3>Not the right fit if:</h3>
+
+        <h3>
+          Not designed to replace:
+        </h3>
+
         <ul class="cross-list">
-          <li>You already work with a full-time accountant or CFO running these processes for you</li>
-          <li>You're looking for tax preparation or legal advice</li>
-          <li>You want done-for-you bookkeeping software rather than a system to run yourself</li>
+
+          <li>
+            Professional accounting services.
+          </li>
+
+          <li>
+            Tax preparation software.
+          </li>
+
+          <li>
+            Full accounting or ERP platforms.
+          </li>
+
+          <li>
+            Professional financial or legal advice.
+          </li>
+
         </ul>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
 
-<!-- ============ WHAT YOU GET ============ -->
+
+<!-- =========================================================
+     WHAT YOU GET
+========================================================= -->
+
 <section class="section value">
-  <div class="wrap narrow">
-    <h2>What you get</h2>
-    <ul class="value-list">
-      <li>
-        <span class="value-title">The complete Small Business Finance &amp; Cash-Flow System guide</span>
-        <span class="value-desc">15 chapters, delivered as a Word document and PDF</span>
-      </li>
-      <li>
-        <span class="value-title">A worked cash-flow forecast example</span>
-        <span class="value-desc">Copy the format directly into your own weekly tracking</span>
-      </li>
-      <li>
-        <span class="value-title">A monthly financial health checklist</span>
-        <span class="value-desc">A repeatable review routine, built into the guide</span>
-      </li>
-      <li>
-        <span class="value-title">A quick-reference glossary</span>
-        <span class="value-desc">Every term defined in plain language, for whenever you need it</span>
-      </li>
-      <li>
-        <span class="value-title">Lifetime access to your download</span>
-        <span class="value-desc">Read it once, keep it as a reference for as long as you run the business</span>
-      </li>
-    </ul>
-  </div>
-</section>
 
-<!-- ============ PRICING ============ -->
-<section class="section pricing" id="pricing">
   <div class="wrap narrow">
-    <div class="price-card">
-      <h2>Small Business Finance &amp; Cash-Flow System</h2>
-      <p class="price-sub">One-time payment. Instant download. No subscription.</p>
-      <div class="price-amount">$19</div>
-      <a href="#" class="btn btn-primary btn-large" id="buy-button">Get instant access</a>
-      <p id="checkout-notice" class="checkout-notice" hidden>Checkout isn't connected yet. Please check back shortly or contact us directly to purchase.</p>
-      <ul class="price-includes">
-        <li>Full 15-chapter guide (Word + PDF)</li>
-        <li>Worked forecast example &amp; monthly checklist</li>
-        <li>Instant delivery to your email</li>
-      </ul>
+
+    <div class="eyebrow">
+      WHAT YOU GET
     </div>
+
+    <h2>
+      Everything you need to start organizing your business finances.
+    </h2>
+
+    <ul class="value-list">
+
+      <li>
+
+        <span class="value-title">
+          Interactive Finance Dashboard
+        </span>
+
+        <span class="value-desc">
+          See income, expenses, cash flow, profit, and financial performance
+          in one place.
+        </span>
+
+      </li>
+
+
+      <li>
+
+        <span class="value-title">
+          Income Tracker
+        </span>
+
+        <span class="value-desc">
+          Record and organize your business income.
+        </span>
+
+      </li>
+
+
+      <li>
+
+        <span class="value-title">
+          Expense Tracker
+        </span>
+
+        <span class="value-desc">
+          Track expenses and understand your spending.
+        </span>
+
+      </li>
+
+
+      <li>
+
+        <span class="value-title">
+          Cash-Flow Tracker
+        </span>
+
+        <span class="value-desc">
+          Calculate net cash flow and closing cash position.
+        </span>
+
+      </li>
+
+
+      <li>
+
+        <span class="value-title">
+          Profitability Calculator
+        </span>
+
+        <span class="value-desc">
+          Calculate gross profit, net profit, and profit margin.
+        </span>
+
+      </li>
+
+
+      <li>
+
+        <span class="value-title">
+          Financial Performance Tools
+        </span>
+
+        <span class="value-desc">
+          Monitor key indicators and understand your business performance.
+        </span>
+
+      </li>
+
+
+      <li>
+
+        <span class="value-title">
+          Finance Guide &amp; Reference Material
+        </span>
+
+        <span class="value-desc">
+          Practical explanations and financial concepts for small-business owners.
+        </span>
+
+      </li>
+
+    </ul>
+
   </div>
+
 </section>
 
-<!-- ============ FAQ ============ -->
-<section class="section faq">
+
+<!-- =========================================================
+     PRICING
+========================================================= -->
+
+<section class="section pricing" id="pricing">
+
   <div class="wrap narrow">
-    <h2>Questions before you buy</h2>
+
+    <div class="price-card">
+
+      <div class="eyebrow">
+        COMPLETE DIGITAL SYSTEM
+      </div>
+
+      <h2>
+        Small Business Finance &amp; Cash-Flow System
+      </h2>
+
+      <p class="price-sub">
+        One-time payment. Digital access. No subscription.
+      </p>
+
+
+      <div class="price-amount">
+        $29
+      </div>
+
+
+      <p class="price-value-note">
+        Track your numbers. Understand your cash.
+        Measure your business performance.
+      </p>
+
+
+      <a
+        href="#"
+        class="btn btn-primary btn-large"
+        id="buy-button">
+        Get Instant Access — $29
+      </a>
+
+
+      <p
+        id="checkout-notice"
+        class="checkout-notice"
+        hidden>
+        Checkout isn't connected yet. Please check back shortly
+        or contact us directly to purchase.
+      </p>
+
+
+      <ul class="price-includes">
+
+        <li>
+          ✓ Interactive financial dashboard
+        </li>
+
+        <li>
+          ✓ Income &amp; expense tracking
+        </li>
+
+        <li>
+          ✓ Cash-flow calculator
+        </li>
+
+        <li>
+          ✓ Profitability calculator
+        </li>
+
+        <li>
+          ✓ Financial performance analysis
+        </li>
+
+        <li>
+          ✓ Finance guide &amp; reference material
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     FAQ
+========================================================= -->
+
+<section class="section faq">
+
+  <div class="wrap narrow">
+
+    <div class="eyebrow">
+      FAQ
+    </div>
+
+    <h2>
+      Questions before you buy
+    </h2>
+
+
     <div class="faq-list">
 
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">Do I need an accounting background to use this?</button>
-        <div class="faq-answer"><p>No. The guide is written specifically for beginners and defines every term in plain language as it's introduced, with a glossary at the end for quick reference.</p></div>
-      </div>
 
       <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">What format does it come in?</button>
-        <div class="faq-answer"><p>You'll receive both a Word document and a PDF, so you can read it, print it, or adapt the checklists and worksheets to your own templates.</p></div>
+
+        <button
+          class="faq-question"
+          aria-expanded="false">
+
+          Do I need an accounting background?
+
+        </button>
+
+        <div class="faq-answer">
+
+          <p>
+            No. The system is designed for small-business owners and
+            beginners who want a practical way to understand their
+            business finances.
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">Is this accounting or bookkeeping software?</button>
-        <div class="faq-answer"><p>No. This is an educational guide that teaches you a system and framework. It doesn't connect to your bank or replace software — it works alongside a spreadsheet, bookkeeping tool, or accountant you already use.</p></div>
-      </div>
 
       <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">Will this work for my type of business?</button>
-        <div class="faq-answer"><p>The framework is built around cash flow principles that apply to service businesses, retail, e-commerce, and solo freelancers alike. Examples throughout use a general small-business scenario so it's easy to adapt to yours.</p></div>
+
+        <button
+          class="faq-question"
+          aria-expanded="false">
+
+          What can I track?
+
+        </button>
+
+        <div class="faq-answer">
+
+          <p>
+            You can record income and expenses, calculate net cash flow,
+            monitor opening and closing cash balances, calculate
+            profitability, and review financial performance.
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">Does this replace my accountant?</button>
-        <div class="faq-answer"><p>No. This guide is for general educational purposes only and isn't a substitute for professional accounting, financial, tax, or legal advice. It's designed to help you understand and manage your day-to-day cash flow alongside whatever professional support you already have.</p></div>
-      </div>
 
       <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">How quickly will I see results?</button>
-        <div class="faq-answer"><p>That depends entirely on your business and how consistently you apply the system — this guide doesn't make income or results claims. Most of the framework, like your first forecast, can be set up within an hour of reading Chapter 6.</p></div>
+
+        <button
+          class="faq-question"
+          aria-expanded="false">
+
+          Does it calculate profit?
+
+        </button>
+
+        <div class="faq-answer">
+
+          <p>
+            Yes. The profitability calculator can calculate gross profit,
+            net profit, and profit margin based on the figures you enter.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="faq-item">
+
+        <button
+          class="faq-question"
+          aria-expanded="false">
+
+          Does it connect to my bank account?
+
+        </button>
+
+        <div class="faq-answer">
+
+          <p>
+            No. This version is designed for manual entry. You control
+            the information you enter into the system.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="faq-item">
+
+        <button
+          class="faq-question"
+          aria-expanded="false">
+
+          Is this accounting software?
+
+        </button>
+
+        <div class="faq-answer">
+
+          <p>
+            It is a practical financial management and educational tool.
+            It does not replace professional accounting, bookkeeping,
+            tax, legal, or financial advice.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="faq-item">
+
+        <button
+          class="faq-question"
+          aria-expanded="false">
+
+          Can I use it for my type of business?
+
+        </button>
+
+        <div class="faq-answer">
+
+          <p>
+            The core tracking and financial calculations can be adapted
+            to many small businesses, freelancers, consultants,
+            service businesses, and entrepreneurs.
+          </p>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     FINAL CTA
+========================================================= -->
+
+<section class="section final-cta">
+
+  <div class="wrap narrow">
+
+    <div class="eyebrow">
+      TAKE CONTROL OF YOUR NUMBERS
+    </div>
+
+    <h2>
+      Stop guessing about your business finances.
+    </h2>
+
+    <p>
+      Track the money. Understand the cash flow.
+      Calculate the profit. See the bigger picture.
+    </p>
+
+    <a
+      href="#pricing"
+      class="btn btn-primary btn-large">
+      Get the Finance System — $29
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="site-footer">
+
+  <div class="wrap">
+
+    <div class="footer-brand">
+
+      <div class="footer-logo-mark">
+        N
+      </div>
+
+      <div>
+        <strong>Nexora</strong>
+        <span>Technologies</span>
       </div>
 
     </div>
-  </div>
-</section>
 
-<!-- ============ FINAL CTA ============ -->
-<section class="section final-cta">
-  <div class="wrap narrow">
-    <h2>Stop finding out about cash problems the week they happen.</h2>
-    <p>Get the system that shows you what's coming — before it lands in your bank account.</p>
-    <a href="#pricing" class="btn btn-primary btn-large">Get the System — $19</a>
-  </div>
-</section>
+    <p>
+      &copy; 2026 Nexora Technologies.
+      Small Business Finance &amp; Cash-Flow System.
+    </p>
 
-<footer class="site-footer">
-  <div class="wrap">
-    <p>&copy; Felix Oluwadamilare Daniels. A Nexora Technologies digital product.</p>
-    <p class="footer-disclaimer">This guide is for general educational purposes only and does not constitute professional accounting, financial, tax, or legal advice.</p>
+    <p class="footer-disclaimer">
+      This product is for general educational and financial-management
+      purposes only. It does not constitute professional accounting,
+      financial, tax, or legal advice.
+    </p>
+
   </div>
+
 </footer>
 
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
 <script src="script.js"></script>
+
 </body>
 </html>
