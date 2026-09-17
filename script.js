@@ -13,8 +13,7 @@
 const STORAGE_KEY = "nexoraSmallBusinessFinanceData";
 
 /*
-  Add the final Selar checkout URL here when the product
-  is published on Selar.
+  Add the final Selar checkout URL here when published.
 
   Example:
   const CHECKOUT_URL = "https://selar.com/your-product-link";
@@ -31,9 +30,7 @@ const DEFAULT_DATA = {
   expenses: [],
 
   cashFlow: {
-    openingBalance: 0,
-    projectedInflows: 0,
-    projectedOutflows: 0
+    openingBalance: 0
   },
 
   profitability: {
@@ -69,19 +66,18 @@ function initializeApplication() {
   setupIncomeForm();
   setupExpenseForm();
   setupCashFlowForm();
-  setupProfitabilityForm();
+  setupProfitabilityCalculator();
   setupResetButtons();
   setupFAQ();
   setupCheckout();
+  setupExportButtons();
 
   restoreForms();
-  renderIncomeTable();
-  renderExpenseTable();
-  updateDashboard();
-  updateCashFlow();
-  updateProfitability();
-  drawCashFlowChart();
-  drawPerformanceChart();
+
+  renderIncomeList();
+  renderExpenseList();
+
+  updateAllFinancialDisplays();
 }
 
 
@@ -94,29 +90,51 @@ function loadData() {
     const saved = localStorage.getItem(STORAGE_KEY);
 
     if (!saved) {
-      return structuredClone(DEFAULT_DATA);
+      return cloneDefaultData();
     }
 
     const parsed = JSON.parse(saved);
 
     return {
-      income: Array.isArray(parsed.income) ? parsed.income : [],
-      expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
+      income: Array.isArray(parsed.income)
+        ? parsed.income
+        : [],
+
+      expenses: Array.isArray(parsed.expenses)
+        ? parsed.expenses
+        : [],
 
       cashFlow: {
-        ...DEFAULT_DATA.cashFlow,
-        ...(parsed.cashFlow || {})
+        openingBalance:
+          Number(parsed.cashFlow?.openingBalance) || 0
       },
 
       profitability: {
-        ...DEFAULT_DATA.profitability,
-        ...(parsed.profitability || {})
+        revenue:
+          Number(parsed.profitability?.revenue) || 0,
+
+        costOfGoods:
+          Number(parsed.profitability?.costOfGoods) || 0,
+
+        operatingExpenses:
+          Number(parsed.profitability?.operatingExpenses) || 0
       }
     };
   } catch (error) {
-    console.error("Unable to load saved financial data:", error);
-    return structuredClone(DEFAULT_DATA);
+    console.error(
+      "Unable to load saved financial data:",
+      error
+    );
+
+    return cloneDefaultData();
   }
+}
+
+
+function cloneDefaultData() {
+  return JSON.parse(
+    JSON.stringify(DEFAULT_DATA)
+  );
 }
 
 
@@ -129,7 +147,10 @@ function saveData() {
 
     showSaveStatus("Financial data saved");
   } catch (error) {
-    console.error("Unable to save financial data:", error);
+    console.error(
+      "Unable to save financial data:",
+      error
+    );
   }
 }
 
@@ -138,7 +159,10 @@ function clearSavedData() {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.error("Unable to clear saved data:", error);
+    console.error(
+      "Unable to clear saved data:",
+      error
+    );
   }
 }
 
@@ -164,28 +188,27 @@ function formatMoney(value) {
 }
 
 
-function formatNumber(value) {
-  return new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 2
-  }).format(Number(value) || 0);
-}
-
-
 function getNumber(id) {
   const element = $(id);
 
-  if (!element) return 0;
+  if (!element) {
+    return 0;
+  }
 
   const value = parseFloat(element.value);
 
-  return Number.isFinite(value) ? value : 0;
+  return Number.isFinite(value)
+    ? value
+    : 0;
 }
 
 
 function getInputValue(id) {
   const element = $(id);
 
-  return element ? element.value.trim() : "";
+  return element
+    ? element.value.trim()
+    : "";
 }
 
 
@@ -199,7 +222,9 @@ function setInputValue(id, value) {
 
 
 function todayISO() {
-  return new Date().toISOString().split("T")[0];
+  return new Date()
+    .toISOString()
+    .split("T")[0];
 }
 
 
@@ -243,13 +268,19 @@ function setupNavigation() {
 
   links.forEach((link) => {
     link.addEventListener("click", (event) => {
-      const targetID = link.getAttribute("href");
+      const targetID =
+        link.getAttribute("href");
 
-      if (!targetID || targetID === "#") return;
+      if (!targetID || targetID === "#") {
+        return;
+      }
 
-      const target = document.querySelector(targetID);
+      const target =
+        document.querySelector(targetID);
 
-      if (!target) return;
+      if (!target) {
+        return;
+      }
 
       event.preventDefault();
 
@@ -267,68 +298,92 @@ function setupNavigation() {
    ========================================================= */
 
 function setupIncomeForm() {
-  const form =
-    $("income-form") ||
-    $("incomeForm");
+  const form = $("income-form");
 
-  if (!form) return;
+  if (!form) {
+    return;
+  }
 
   const dateInput =
-    $("income-date") ||
-    $("incomeDate");
+    $("income-date");
 
-  if (dateInput && !dateInput.value) {
+  if (
+    dateInput &&
+    !dateInput.value
+  ) {
     dateInput.value = todayISO();
   }
 
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
+  form.addEventListener(
+    "submit",
+    (event) => {
+      event.preventDefault();
 
-    const description =
-      getInputValue("income-description") ||
-      getInputValue("incomeDescription");
+      const description =
+        getInputValue(
+          "income-description"
+        );
 
-    const category =
-      getInputValue("income-category") ||
-      getInputValue("incomeCategory");
+      const category =
+        getInputValue(
+          "income-category"
+        );
 
-    const amount =
-      getNumber("income-amount") ||
-      getNumber("incomeAmount");
+      const amount =
+        getNumber(
+          "income-amount"
+        );
 
-    const date =
-      getInputValue("income-date") ||
-      getInputValue("incomeDate") ||
-      todayISO();
+      const date =
+        getInputValue(
+          "income-date"
+        ) || todayISO();
 
-    if (amount <= 0) {
-      alert("Please enter a valid income amount.");
-      return;
+      if (!description) {
+        alert(
+          "Please enter an income description."
+        );
+        return;
+      }
+
+      if (!category) {
+        alert(
+          "Please select an income category."
+        );
+        return;
+      }
+
+      if (amount <= 0) {
+        alert(
+          "Please enter a valid income amount."
+        );
+        return;
+      }
+
+      financeData.income.push({
+        id:
+          Date.now() +
+          Math.random(),
+
+        description,
+        category,
+        amount,
+        date
+      });
+
+      saveData();
+
+      form.reset();
+
+      if (dateInput) {
+        dateInput.value =
+          todayISO();
+      }
+
+      renderIncomeList();
+      updateAllFinancialDisplays();
     }
-
-    financeData.income.push({
-      id: Date.now(),
-      description: description || "Income",
-      category: category || "Other",
-      amount,
-      date
-    });
-
-    saveData();
-
-    form.reset();
-
-    if (dateInput) {
-      dateInput.value = todayISO();
-    }
-
-    renderIncomeTable();
-    updateDashboard();
-    updateCashFlow();
-    updateProfitability();
-    drawCashFlowChart();
-    drawPerformanceChart();
-  });
+  );
 }
 
 
@@ -337,135 +392,198 @@ function setupIncomeForm() {
    ========================================================= */
 
 function setupExpenseForm() {
-  const form =
-    $("expense-form") ||
-    $("expenseForm");
+  const form = $("expense-form");
 
-  if (!form) return;
+  if (!form) {
+    return;
+  }
 
   const dateInput =
-    $("expense-date") ||
-    $("expenseDate");
+    $("expense-date");
 
-  if (dateInput && !dateInput.value) {
+  if (
+    dateInput &&
+    !dateInput.value
+  ) {
     dateInput.value = todayISO();
   }
 
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
+  form.addEventListener(
+    "submit",
+    (event) => {
+      event.preventDefault();
 
-    const description =
-      getInputValue("expense-description") ||
-      getInputValue("expenseDescription");
+      const description =
+        getInputValue(
+          "expense-description"
+        );
 
-    const category =
-      getInputValue("expense-category") ||
-      getInputValue("expenseCategory");
+      const category =
+        getInputValue(
+          "expense-category"
+        );
 
-    const amount =
-      getNumber("expense-amount") ||
-      getNumber("expenseAmount");
+      const amount =
+        getNumber(
+          "expense-amount"
+        );
 
-    const date =
-      getInputValue("expense-date") ||
-      getInputValue("expenseDate") ||
-      todayISO();
+      const date =
+        getInputValue(
+          "expense-date"
+        ) || todayISO();
 
-    if (amount <= 0) {
-      alert("Please enter a valid expense amount.");
-      return;
+      if (!description) {
+        alert(
+          "Please enter an expense description."
+        );
+        return;
+      }
+
+      if (!category) {
+        alert(
+          "Please select an expense category."
+        );
+        return;
+      }
+
+      if (amount <= 0) {
+        alert(
+          "Please enter a valid expense amount."
+        );
+        return;
+      }
+
+      financeData.expenses.push({
+        id:
+          Date.now() +
+          Math.random(),
+
+        description,
+        category,
+        amount,
+        date
+      });
+
+      saveData();
+
+      form.reset();
+
+      if (dateInput) {
+        dateInput.value =
+          todayISO();
+      }
+
+      renderExpenseList();
+      updateAllFinancialDisplays();
     }
-
-    financeData.expenses.push({
-      id: Date.now(),
-      description: description || "Expense",
-      category: category || "Other",
-      amount,
-      date
-    });
-
-    saveData();
-
-    form.reset();
-
-    if (dateInput) {
-      dateInput.value = todayISO();
-    }
-
-    renderExpenseTable();
-    updateDashboard();
-    updateCashFlow();
-    updateProfitability();
-    drawCashFlowChart();
-    drawPerformanceChart();
-  });
+  );
 }
 
 
 /* =========================================================
-   11. INCOME TABLE
+   11. INCOME LIST
    ========================================================= */
 
-function renderIncomeTable() {
-  const tableBody =
-    $("income-table-body") ||
-    $("incomeTableBody");
+function renderIncomeList() {
+  const list =
+    $("income-list");
 
-  if (!tableBody) return;
-
-  if (financeData.income.length === 0) {
-    tableBody.innerHTML = `
-      <tr>
-        <td colspan="6" class="empty-state">
-          No income entries yet.
-        </td>
-      </tr>
-    `;
-
-    updateElement(
-      "income-total",
-      formatMoney(0)
-    );
-
+  if (!list) {
     return;
   }
 
-  tableBody.innerHTML = financeData.income
-    .map((item, index) => {
-      return `
-        <tr>
-          <td>${escapeHTML(item.date)}</td>
-          <td>${escapeHTML(item.description)}</td>
-          <td>${escapeHTML(item.category)}</td>
-          <td>${formatMoney(item.amount)}</td>
-          <td>
-            <button
-              type="button"
-              class="delete-entry"
-              data-income-id="${item.id}"
-              aria-label="Delete income entry"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      `;
-    })
-    .join("");
-
-  const total = calculateTotalIncome();
+  const total =
+    calculateTotalIncome();
 
   updateElement(
     "income-total",
     formatMoney(total)
   );
 
-  tableBody
-    .querySelectorAll("[data-income-id]")
+  if (
+    financeData.income.length === 0
+  ) {
+    list.innerHTML = `
+      <div class="transaction-empty">
+        No income entries yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  const sorted =
+    [...financeData.income]
+      .sort(
+        (a, b) =>
+          new Date(b.date) -
+          new Date(a.date)
+      );
+
+  list.innerHTML =
+    sorted
+      .map((item) => {
+        return `
+          <div class="transaction-item">
+
+            <div class="transaction-info">
+
+              <strong>
+                ${escapeHTML(
+                  item.description
+                )}
+              </strong>
+
+              <span>
+                ${escapeHTML(
+                  item.category
+                )}
+                •
+                ${escapeHTML(
+                  item.date
+                )}
+              </span>
+
+            </div>
+
+            <div>
+
+              <span class="transaction-amount">
+                +${formatMoney(
+                  item.amount
+                )}
+              </span>
+
+              <button
+                type="button"
+                class="delete-transaction"
+                data-income-id="${item.id}"
+                aria-label="Delete income entry"
+              >
+                Delete
+              </button>
+
+            </div>
+
+          </div>
+        `;
+      })
+      .join("");
+
+  list
+    .querySelectorAll(
+      "[data-income-id]"
+    )
     .forEach((button) => {
-      button.addEventListener("click", () => {
-        deleteIncome(button.dataset.incomeId);
-      });
+      button.addEventListener(
+        "click",
+        () => {
+          deleteIncome(
+            button.dataset.incomeId
+          );
+        }
+      );
     });
 }
 
@@ -473,84 +591,121 @@ function renderIncomeTable() {
 function deleteIncome(id) {
   financeData.income =
     financeData.income.filter(
-      (item) => String(item.id) !== String(id)
+      (item) =>
+        String(item.id) !==
+        String(id)
     );
 
   saveData();
 
-  renderIncomeTable();
-  updateDashboard();
-  updateCashFlow();
-  updateProfitability();
-  drawCashFlowChart();
-  drawPerformanceChart();
+  renderIncomeList();
+  updateAllFinancialDisplays();
 }
 
 
 /* =========================================================
-   12. EXPENSE TABLE
+   12. EXPENSE LIST
    ========================================================= */
 
-function renderExpenseTable() {
-  const tableBody =
-    $("expense-table-body") ||
-    $("expenseTableBody");
+function renderExpenseList() {
+  const list =
+    $("expense-list");
 
-  if (!tableBody) return;
-
-  if (financeData.expenses.length === 0) {
-    tableBody.innerHTML = `
-      <tr>
-        <td colspan="6" class="empty-state">
-          No expense entries yet.
-        </td>
-      </tr>
-    `;
-
-    updateElement(
-      "expense-total",
-      formatMoney(0)
-    );
-
+  if (!list) {
     return;
   }
 
-  tableBody.innerHTML = financeData.expenses
-    .map((item) => {
-      return `
-        <tr>
-          <td>${escapeHTML(item.date)}</td>
-          <td>${escapeHTML(item.description)}</td>
-          <td>${escapeHTML(item.category)}</td>
-          <td>${formatMoney(item.amount)}</td>
-          <td>
-            <button
-              type="button"
-              class="delete-entry"
-              data-expense-id="${item.id}"
-              aria-label="Delete expense entry"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      `;
-    })
-    .join("");
-
-  const total = calculateTotalExpenses();
+  const total =
+    calculateTotalExpenses();
 
   updateElement(
     "expense-total",
     formatMoney(total)
   );
 
-  tableBody
-    .querySelectorAll("[data-expense-id]")
+  if (
+    financeData.expenses.length === 0
+  ) {
+    list.innerHTML = `
+      <div class="transaction-empty">
+        No expense entries yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  const sorted =
+    [...financeData.expenses]
+      .sort(
+        (a, b) =>
+          new Date(b.date) -
+          new Date(a.date)
+      );
+
+  list.innerHTML =
+    sorted
+      .map((item) => {
+        return `
+          <div class="transaction-item">
+
+            <div class="transaction-info">
+
+              <strong>
+                ${escapeHTML(
+                  item.description
+                )}
+              </strong>
+
+              <span>
+                ${escapeHTML(
+                  item.category
+                )}
+                •
+                ${escapeHTML(
+                  item.date
+                )}
+              </span>
+
+            </div>
+
+            <div>
+
+              <span class="transaction-amount">
+                -${formatMoney(
+                  item.amount
+                )}
+              </span>
+
+              <button
+                type="button"
+                class="delete-transaction"
+                data-expense-id="${item.id}"
+                aria-label="Delete expense entry"
+              >
+                Delete
+              </button>
+
+            </div>
+
+          </div>
+        `;
+      })
+      .join("");
+
+  list
+    .querySelectorAll(
+      "[data-expense-id]"
+    )
     .forEach((button) => {
-      button.addEventListener("click", () => {
-        deleteExpense(button.dataset.expenseId);
-      });
+      button.addEventListener(
+        "click",
+        () => {
+          deleteExpense(
+            button.dataset.expenseId
+          );
+        }
+      );
     });
 }
 
@@ -558,17 +713,15 @@ function renderExpenseTable() {
 function deleteExpense(id) {
   financeData.expenses =
     financeData.expenses.filter(
-      (item) => String(item.id) !== String(id)
+      (item) =>
+        String(item.id) !==
+        String(id)
     );
 
   saveData();
 
-  renderExpenseTable();
-  updateDashboard();
-  updateCashFlow();
-  updateProfitability();
-  drawCashFlowChart();
-  drawPerformanceChart();
+  renderExpenseList();
+  updateAllFinancialDisplays();
 }
 
 
@@ -579,7 +732,8 @@ function deleteExpense(id) {
 function calculateTotalIncome() {
   return financeData.income.reduce(
     (total, item) =>
-      total + (Number(item.amount) || 0),
+      total +
+      (Number(item.amount) || 0),
     0
   );
 }
@@ -588,7 +742,8 @@ function calculateTotalIncome() {
 function calculateTotalExpenses() {
   return financeData.expenses.reduce(
     (total, item) =>
-      total + (Number(item.amount) || 0),
+      total +
+      (Number(item.amount) || 0),
     0
   );
 }
@@ -602,695 +757,648 @@ function calculateNetCashFlow() {
 }
 
 
-function calculateProfitMargin() {
-  const revenue = calculateTotalIncome();
-  const expenses = calculateTotalExpenses();
+function calculateNetProfit() {
+  return calculateNetCashFlow();
+}
 
-  if (revenue <= 0) {
+
+function calculateProfitMargin() {
+  const income =
+    calculateTotalIncome();
+
+  const profit =
+    calculateNetProfit();
+
+  if (income <= 0) {
     return 0;
   }
 
-  return ((revenue - expenses) / revenue) * 100;
+  return (
+    (profit / income) *
+    100
+  );
+}
+
+
+function calculateExpenseRatio() {
+  const income =
+    calculateTotalIncome();
+
+  const expenses =
+    calculateTotalExpenses();
+
+  if (income <= 0) {
+    return 0;
+  }
+
+  return (
+    (expenses / income) *
+    100
+  );
 }
 
 
 /* =========================================================
-   14. DASHBOARD
+   14. MASTER DISPLAY UPDATE
+   ========================================================= */
+
+function updateAllFinancialDisplays() {
+  updateDashboard();
+  updateCashFlow();
+  updateProfitability();
+  updateFinancialPerformance();
+  updateDynamicChart();
+}
+
+
+/* =========================================================
+   15. DASHBOARD
    ========================================================= */
 
 function updateDashboard() {
-  const totalIncome =
+  const income =
     calculateTotalIncome();
 
-  const totalExpenses =
+  const expenses =
     calculateTotalExpenses();
 
   const netCashFlow =
-    totalIncome - totalExpenses;
+    calculateNetCashFlow();
 
-  const profitMargin =
+  const netProfit =
+    calculateNetProfit();
+
+  const margin =
     calculateProfitMargin();
 
+  const expenseRatio =
+    calculateExpenseRatio();
+
+
+  /* Main KPI cards */
+
   updateMany(
     [
-      "dashboard-income",
-      "total-income",
-      "totalIncome",
-      "kpi-income"
+      "total-income"
     ],
-    formatMoney(totalIncome)
+    formatMoney(income)
   );
 
   updateMany(
     [
-      "dashboard-expenses",
-      "total-expenses",
-      "totalExpenses",
-      "kpi-expenses"
+      "total-expenses"
     ],
-    formatMoney(totalExpenses)
+    formatMoney(expenses)
   );
 
   updateMany(
     [
-      "dashboard-cash-flow",
-      "net-cash-flow",
-      "netCashFlow",
-      "kpi-cash-flow"
+      "net-cash-flow"
     ],
     formatMoney(netCashFlow)
   );
 
   updateMany(
     [
-      "dashboard-profit-margin",
-      "profit-margin",
-      "profitMargin",
-      "kpi-margin"
+      "net-profit"
     ],
-    `${profitMargin.toFixed(1)}%`
+    formatMoney(netProfit)
   );
 
   updateMany(
     [
-      "dashboard-entries",
-      "total-entries"
+      "profit-margin"
     ],
-    formatNumber(
-      financeData.income.length +
-      financeData.expenses.length
-    )
+    `${margin.toFixed(1)}%`
   );
 
-  updateCashFlowStatus(netCashFlow);
-}
-
-
-function updateCashFlowStatus(value) {
-  const elements = document.querySelectorAll(
-    ".cash-flow-status, #cash-flow-status"
+  updateMany(
+    [
+      "expense-ratio"
+    ],
+    `${expenseRatio.toFixed(1)}%`
   );
 
-  elements.forEach((element) => {
-    if (value > 0) {
-      element.textContent = "Positive cash flow";
-      element.dataset.status = "positive";
-    } else if (value < 0) {
-      element.textContent = "Negative cash flow";
-      element.dataset.status = "negative";
-    } else {
-      element.textContent = "Break-even cash flow";
-      element.dataset.status = "neutral";
-    }
-  });
+
+  /* Hero dashboard preview */
+
+  updateMany(
+    [
+      "preview-income"
+    ],
+    formatMoney(income)
+  );
+
+  updateMany(
+    [
+      "preview-expenses"
+    ],
+    formatMoney(expenses)
+  );
+
+  updateMany(
+    [
+      "preview-cashflow"
+    ],
+    formatMoney(netCashFlow)
+  );
+
+  updateMany(
+    [
+      "preview-profit"
+    ],
+    formatMoney(netProfit)
+  );
 }
 
 
 /* =========================================================
-   15. CASH FLOW CALCULATOR
+   16. CASH-FLOW TRACKER
    ========================================================= */
 
 function setupCashFlowForm() {
-  const form =
-    $("cash-flow-form") ||
-    $("cashFlowForm");
+  const input =
+    $("opening-cash");
 
-  if (!form) return;
+  if (!input) {
+    return;
+  }
 
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
+  input.addEventListener(
+    "input",
+    () => {
+      financeData.cashFlow.openingBalance =
+        getNumber(
+          "opening-cash"
+        );
 
-    financeData.cashFlow.openingBalance =
-      getNumber("opening-balance") ||
-      getNumber("openingBalance");
-
-    financeData.cashFlow.projectedInflows =
-      getNumber("projected-inflows") ||
-      getNumber("projectedInflows");
-
-    financeData.cashFlow.projectedOutflows =
-      getNumber("projected-outflows") ||
-      getNumber("projectedOutflows");
-
-    saveData();
-
-    updateCashFlow();
-    drawCashFlowChart();
-  });
-
-  const inputs = form.querySelectorAll("input");
-
-  inputs.forEach((input) => {
-    input.addEventListener("input", () => {
-      calculateCashFlowLive();
-    });
-  });
-}
-
-
-function calculateCashFlowLive() {
-  const opening =
-    getNumber("opening-balance") ||
-    getNumber("openingBalance");
-
-  const inflows =
-    getNumber("projected-inflows") ||
-    getNumber("projectedInflows");
-
-  const outflows =
-    getNumber("projected-outflows") ||
-    getNumber("projectedOutflows");
-
-  const closing =
-    opening + inflows - outflows;
-
-  updateMany(
-    [
-      "closing-balance",
-      "closingBalance",
-      "cash-flow-result"
-    ],
-    formatMoney(closing)
+      updateCashFlow();
+      saveData();
+    }
   );
 }
 
 
 function updateCashFlow() {
   const opening =
-    Number(financeData.cashFlow.openingBalance) || 0;
+    Number(
+      financeData.cashFlow.openingBalance
+    ) || 0;
 
-  const inflows =
-    Number(financeData.cashFlow.projectedInflows) || 0;
+  const net =
+    calculateNetCashFlow();
 
-  const outflows =
-    Number(financeData.cashFlow.projectedOutflows) || 0;
+  const closing =
+    opening + net;
 
-  const calculatedIncome =
-    calculateTotalIncome();
 
-  const calculatedExpenses =
-    calculateTotalExpenses();
-
-  const actualNet =
-    calculatedIncome - calculatedExpenses;
-
-  const projectedClosing =
-    opening + inflows - outflows;
-
-  const actualClosing =
-    opening + actualNet;
-
-  updateMany(
-    [
-      "opening-balance-display",
-      "openingBalanceDisplay"
-    ],
+  updateElement(
+    "cash-opening",
     formatMoney(opening)
   );
 
-  updateMany(
-    [
-      "projected-inflows-display",
-      "projectedInflowsDisplay"
-    ],
-    formatMoney(inflows)
+  updateElement(
+    "cash-net",
+    formatMoney(net)
   );
 
-  updateMany(
-    [
-      "projected-outflows-display",
-      "projectedOutflowsDisplay"
-    ],
-    formatMoney(outflows)
+  updateElement(
+    "cash-closing",
+    formatMoney(closing)
   );
 
-  updateMany(
-    [
-      "closing-balance",
-      "closingBalance",
-      "cash-flow-result"
-    ],
-    formatMoney(projectedClosing)
-  );
 
-  updateMany(
-    [
-      "actual-closing-balance",
-      "actualClosingBalance"
-    ],
-    formatMoney(actualClosing)
-  );
+  const status =
+    $("cash-status");
 
-  updateMany(
-    [
-      "actual-net-cash-flow",
-      "actualNetCashFlow"
-    ],
-    formatMoney(actualNet)
-  );
+  if (!status) {
+    return;
+  }
+
+
+  if (
+    financeData.income.length === 0 &&
+    financeData.expenses.length === 0
+  ) {
+    status.textContent =
+      "Add your transactions to see your cash position.";
+
+    status.dataset.status =
+      "neutral";
+
+    return;
+  }
+
+
+  if (net > 0) {
+    status.textContent =
+      "Positive cash flow — more money is coming in than going out.";
+
+    status.dataset.status =
+      "positive";
+
+  } else if (net < 0) {
+    status.textContent =
+      "Negative cash flow — expenses currently exceed income.";
+
+    status.dataset.status =
+      "negative";
+
+  } else {
+    status.textContent =
+      "Break-even cash flow — income and expenses are currently equal.";
+
+    status.dataset.status =
+      "neutral";
+  }
 }
 
 
 /* =========================================================
-   16. PROFITABILITY CALCULATOR
+   17. PROFITABILITY CALCULATOR
    ========================================================= */
 
-function setupProfitabilityForm() {
-  const form =
-    $("profitability-form") ||
-    $("profitabilityForm");
+function setupProfitabilityCalculator() {
+  const fields = [
+    "profit-revenue",
+    "profit-direct-cost",
+    "profit-operating-cost"
+  ];
 
-  if (!form) return;
+  fields.forEach((id) => {
+    const input = $(id);
 
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
+    if (!input) {
+      return;
+    }
 
-    financeData.profitability.revenue =
-      getNumber("profit-revenue") ||
-      getNumber("profitRevenue") ||
-      getNumber("revenue");
+    input.addEventListener(
+      "input",
+      calculateProfitabilityLive
+    );
 
-    financeData.profitability.costOfGoods =
-      getNumber("cost-of-goods") ||
-      getNumber("costOfGoods") ||
-      getNumber("cogs");
-
-    financeData.profitability.operatingExpenses =
-      getNumber("operating-expenses") ||
-      getNumber("operatingExpenses");
-
-    saveData();
-
-    updateProfitability();
-    drawPerformanceChart();
-  });
-
-  form.querySelectorAll("input").forEach((input) => {
-    input.addEventListener("input", () => {
-      calculateProfitabilityLive();
-    });
+    input.addEventListener(
+      "change",
+      saveProfitability
+    );
   });
 }
 
 
-function calculateProfitabilityLive() {
+function calculateProfitabilityValues() {
   const revenue =
-    getNumber("profit-revenue") ||
-    getNumber("profitRevenue") ||
-    getNumber("revenue");
+    getNumber(
+      "profit-revenue"
+    );
 
-  const cogs =
-    getNumber("cost-of-goods") ||
-    getNumber("costOfGoods") ||
-    getNumber("cogs");
+  const directCost =
+    getNumber(
+      "profit-direct-cost"
+    );
 
-  const operatingExpenses =
-    getNumber("operating-expenses") ||
-    getNumber("operatingExpenses");
+  const operatingCost =
+    getNumber(
+      "profit-operating-cost"
+    );
 
   const grossProfit =
-    revenue - cogs;
+    revenue - directCost;
 
   const netProfit =
-    grossProfit - operatingExpenses;
+    grossProfit -
+    operatingCost;
 
   const margin =
     revenue > 0
       ? (netProfit / revenue) * 100
-      : 0;
-
-  updateMany(
-    [
-      "gross-profit",
-      "grossProfit"
-    ],
-    formatMoney(grossProfit)
-  );
-
-  updateMany(
-    [
-      "net-profit",
-      "netProfit"
-    ],
-    formatMoney(netProfit)
-  );
-
-  updateMany(
-    [
-      "profitability-margin",
-      "profitabilityMargin"
-    ],
-    `${margin.toFixed(1)}%`
-  );
-}
-
-
-function updateProfitability() {
-  const revenue =
-    Number(financeData.profitability.revenue) || 0;
-
-  const cogs =
-    Number(financeData.profitability.costOfGoods) || 0;
-
-  const operatingExpenses =
-    Number(financeData.profitability.operatingExpenses) || 0;
-
-  const grossProfit =
-    revenue - cogs;
-
-  const netProfit =
-    grossProfit - operatingExpenses;
-
-  const margin =
-    revenue > 0
-      ? (netProfit / revenue) * 100
-      : 0;
-
-  updateMany(
-    [
-      "profit-revenue-display",
-      "profitRevenueDisplay"
-    ],
-    formatMoney(revenue)
-  );
-
-  updateMany(
-    [
-      "cost-of-goods-display",
-      "costOfGoodsDisplay"
-    ],
-    formatMoney(cogs)
-  );
-
-  updateMany(
-    [
-      "operating-expenses-display",
-      "operatingExpensesDisplay"
-    ],
-    formatMoney(operatingExpenses)
-  );
-
-  updateMany(
-    [
-      "gross-profit",
-      "grossProfit"
-    ],
-    formatMoney(grossProfit)
-  );
-
-  updateMany(
-    [
-      "net-profit",
-      "netProfit"
-    ],
-    formatMoney(netProfit)
-  );
-
-  updateMany(
-    [
-      "profitability-margin",
-      "profitabilityMargin"
-    ],
-    `${margin.toFixed(1)}%`
-  );
-}
-
-
-/* =========================================================
-   17. FINANCIAL PERFORMANCE CALCULATOR
-   ========================================================= */
-
-function calculateFinancialPerformance() {
-  const income =
-    calculateTotalIncome();
-
-  const expenses =
-    calculateTotalExpenses();
-
-  const net =
-    income - expenses;
-
-  const margin =
-    income > 0
-      ? (net / income) * 100
       : 0;
 
   return {
-    income,
-    expenses,
-    net,
+    revenue,
+    directCost,
+    operatingCost,
+    grossProfit,
+    netProfit,
     margin
   };
 }
 
 
+function calculateProfitabilityLive() {
+  const values =
+    calculateProfitabilityValues();
+
+  updateElement(
+    "gross-profit",
+    formatMoney(
+      values.grossProfit
+    )
+  );
+
+  updateElement(
+    "calculator-net-profit",
+    formatMoney(
+      values.netProfit
+    )
+  );
+
+  updateElement(
+    "calculator-profit-margin",
+    `${values.margin.toFixed(1)}%`
+  );
+}
+
+
+function saveProfitability() {
+  const values =
+    calculateProfitabilityValues();
+
+  financeData.profitability = {
+    revenue:
+      values.revenue,
+
+    costOfGoods:
+      values.directCost,
+
+    operatingExpenses:
+      values.operatingCost
+  };
+
+  saveData();
+
+  calculateProfitabilityLive();
+}
+
+
+function updateProfitability() {
+  const revenue =
+    Number(
+      financeData.profitability.revenue
+    ) || 0;
+
+  const directCost =
+    Number(
+      financeData.profitability.costOfGoods
+    ) || 0;
+
+  const operatingCost =
+    Number(
+      financeData.profitability.operatingExpenses
+    ) || 0;
+
+  const grossProfit =
+    revenue - directCost;
+
+  const netProfit =
+    grossProfit -
+    operatingCost;
+
+  const margin =
+    revenue > 0
+      ? (netProfit / revenue) * 100
+      : 0;
+
+  updateElement(
+    "gross-profit",
+    formatMoney(grossProfit)
+  );
+
+  updateElement(
+    "calculator-net-profit",
+    formatMoney(netProfit)
+  );
+
+  updateElement(
+    "calculator-profit-margin",
+    `${margin.toFixed(1)}%`
+  );
+}
+
+
 /* =========================================================
-   18. CHART — CASH FLOW
+   18. FINANCIAL PERFORMANCE
    ========================================================= */
 
-function drawCashFlowChart() {
-  const canvas =
-    $("cash-flow-chart") ||
-    $("cashFlowChart");
+function calculateFinancialPerformance() {
+  const revenue =
+    calculateTotalIncome();
 
-  if (!canvas) return;
+  const expenses =
+    calculateTotalExpenses();
 
-  const ctx = canvas.getContext("2d");
+  const profit =
+    revenue - expenses;
 
-  if (!ctx) return;
+  const margin =
+    revenue > 0
+      ? (profit / revenue) * 100
+      : 0;
 
+  return {
+    revenue,
+    expenses,
+    profit,
+    margin
+  };
+}
+
+
+function updateFinancialPerformance() {
+  const performance =
+    calculateFinancialPerformance();
+
+
+  updateElement(
+    "performance-revenue",
+    formatMoney(
+      performance.revenue
+    )
+  );
+
+
+  updateElement(
+    "performance-expenses",
+    formatMoney(
+      performance.expenses
+    )
+  );
+
+
+  updateElement(
+    "performance-profit",
+    formatMoney(
+      performance.profit
+    )
+  );
+
+
+  updateElement(
+    "performance-margin",
+    `${performance.margin.toFixed(1)}%`
+  );
+
+
+  const message =
+    $("performance-message");
+
+  if (!message) {
+    return;
+  }
+
+
+  if (
+    performance.revenue === 0 &&
+    performance.expenses === 0
+  ) {
+    message.textContent =
+      "Add financial data to generate your performance summary.";
+
+    message.dataset.status =
+      "neutral";
+
+    return;
+  }
+
+
+  if (
+    performance.profit > 0
+  ) {
+    message.textContent =
+      "Current performance: income is higher than recorded expenses.";
+
+    message.dataset.status =
+      "positive";
+
+  } else if (
+    performance.profit < 0
+  ) {
+    message.textContent =
+      "Current performance: recorded expenses are higher than income.";
+
+    message.dataset.status =
+      "negative";
+
+  } else {
+    message.textContent =
+      "Current performance: recorded income and expenses are equal.";
+
+    message.dataset.status =
+      "neutral";
+  }
+}
+
+
+/* =========================================================
+   19. DYNAMIC INCOME VS EXPENSES CHART
+   ========================================================= */
+
+function updateDynamicChart() {
   const income =
     calculateTotalIncome();
 
   const expenses =
     calculateTotalExpenses();
 
-  const net =
-    income - expenses;
-
-  const values = [
-    income,
-    expenses,
-    Math.max(net, 0)
-  ];
-
-  const labels = [
-    "Income",
-    "Expenses",
-    "Net Cash Flow"
-  ];
-
-  drawBarChart(
-    canvas,
-    ctx,
-    labels,
-    values
-  );
-}
-
-
-/* =========================================================
-   19. CHART — PERFORMANCE
-   ========================================================= */
-
-function drawPerformanceChart() {
-  const canvas =
-    $("performance-chart") ||
-    $("performanceChart") ||
-    $("financial-chart") ||
-    $("financialChart");
-
-  if (!canvas) return;
-
-  const ctx = canvas.getContext("2d");
-
-  if (!ctx) return;
-
-  const performance =
-    calculateFinancialPerformance();
-
-  const labels = [
-    "Income",
-    "Expenses",
-    "Net"
-  ];
-
-  const values = [
-    performance.income,
-    performance.expenses,
-    Math.max(performance.net, 0)
-  ];
-
-  drawBarChart(
-    canvas,
-    ctx,
-    labels,
-    values
-  );
-}
-
-
-/* =========================================================
-   20. SIMPLE CANVAS BAR CHART ENGINE
-   ========================================================= */
-
-function drawBarChart(
-  canvas,
-  ctx,
-  labels,
-  values
-) {
-  const width =
-    canvas.clientWidth || 600;
-
-  const height =
-    canvas.clientHeight || 320;
-
-  const ratio =
-    window.devicePixelRatio || 1;
-
-  canvas.width =
-    width * ratio;
-
-  canvas.height =
-    height * ratio;
-
-  ctx.setTransform(
-    ratio,
-    0,
-    0,
-    ratio,
-    0,
-    0
-  );
-
-  ctx.clearRect(
-    0,
-    0,
-    width,
-    height
-  );
-
   const maxValue =
-    Math.max(...values, 1);
-
-  const padding = 45;
-
-  const chartWidth =
-    width - padding * 2;
-
-  const chartHeight =
-    height - padding * 2;
-
-  const barGap = 20;
-
-  const barWidth =
-    (chartWidth -
-      barGap * (values.length - 1)) /
-    values.length;
-
-  values.forEach((value, index) => {
-    const safeValue =
-      Math.max(Number(value) || 0, 0);
-
-    const barHeight =
-      (safeValue / maxValue) *
-      chartHeight;
-
-    const x =
-      padding +
-      index *
-        (barWidth + barGap);
-
-    const y =
-      height -
-      padding -
-      barHeight;
-
-    ctx.fillStyle = "#D4AF37";
-
-    ctx.fillRect(
-      x,
-      y,
-      barWidth,
-      barHeight
+    Math.max(
+      income,
+      expenses,
+      1
     );
 
-    ctx.fillStyle = "#111111";
 
-    ctx.font =
-      "600 12px Arial";
+  const incomeBar =
+    $("income-chart-bar");
 
-    ctx.textAlign = "center";
+  const expenseBar =
+    $("expense-chart-bar");
 
-    ctx.fillText(
-      labels[index],
-      x + barWidth / 2,
-      height - 20
+
+  if (incomeBar) {
+    const incomeHeight =
+      Math.max(
+        4,
+        (income / maxValue) * 100
+      );
+
+    incomeBar.style.height =
+      `${incomeHeight}%`;
+
+    incomeBar.setAttribute(
+      "aria-label",
+      `Income ${formatMoney(income)}`
     );
+  }
 
-    ctx.fillText(
-      formatMoney(safeValue),
-      x + barWidth / 2,
-      Math.max(y - 8, 15)
+
+  if (expenseBar) {
+    const expenseHeight =
+      Math.max(
+        4,
+        (expenses / maxValue) * 100
+      );
+
+    expenseBar.style.height =
+      `${expenseHeight}%`;
+
+    expenseBar.setAttribute(
+      "aria-label",
+      `Expenses ${formatMoney(expenses)}`
     );
-  });
+  }
 
-  ctx.strokeStyle = "#D4AF37";
-  ctx.lineWidth = 1;
 
-  ctx.beginPath();
-
-  ctx.moveTo(
-    padding,
-    height - padding
+  updateElement(
+    "chart-income",
+    formatMoney(income)
   );
 
-  ctx.lineTo(
-    width - padding,
-    height - padding
+  updateElement(
+    "chart-expenses",
+    formatMoney(expenses)
   );
-
-  ctx.stroke();
 }
 
 
 /* =========================================================
-   21. RESET SYSTEM
+   20. RESET SYSTEM
    ========================================================= */
 
 function setupResetButtons() {
-  const resetButtons = document.querySelectorAll(
-    "#reset-data, #resetData, .reset-data, [data-reset]"
-  );
+  const buttons =
+    document.querySelectorAll(
+      "#reset-data, #resetData, .reset-data, [data-reset]"
+    );
 
-  resetButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const confirmed = confirm(
-        "Are you sure you want to delete all saved financial data? This cannot be undone."
-      );
+  buttons.forEach((button) => {
+    button.addEventListener(
+      "click",
+      () => {
+        const confirmed =
+          confirm(
+            "Are you sure you want to delete all saved financial data? This cannot be undone."
+          );
 
-      if (!confirmed) return;
+        if (!confirmed) {
+          return;
+        }
 
-      financeData =
-        structuredClone(DEFAULT_DATA);
+        financeData =
+          cloneDefaultData();
 
-      clearSavedData();
+        clearSavedData();
 
-      resetAllForms();
+        resetAllForms();
 
-      renderIncomeTable();
-      renderExpenseTable();
-      updateDashboard();
-      updateCashFlow();
-      updateProfitability();
-      drawCashFlowChart();
-      drawPerformanceChart();
+        renderIncomeList();
+        renderExpenseList();
+        updateAllFinancialDisplays();
 
-      showSaveStatus(
-        "All financial data has been reset"
-      );
-    });
+        showSaveStatus(
+          "All financial data has been reset"
+        );
+      }
+    );
   });
 }
 
@@ -1302,49 +1410,26 @@ function resetAllForms() {
       form.reset();
     });
 
-  const dateFields = document.querySelectorAll(
-    'input[type="date"]'
-  );
+  const dateFields =
+    document.querySelectorAll(
+      'input[type="date"]'
+    );
 
   dateFields.forEach((field) => {
-    field.value = todayISO();
+    field.value =
+      todayISO();
   });
 }
 
 
 /* =========================================================
-   22. RESTORE SAVED FORMS
+   21. RESTORE SAVED FORMS
    ========================================================= */
 
 function restoreForms() {
   setInputValue(
-    "opening-balance",
+    "opening-cash",
     financeData.cashFlow.openingBalance
-  );
-
-  setInputValue(
-    "openingBalance",
-    financeData.cashFlow.openingBalance
-  );
-
-  setInputValue(
-    "projected-inflows",
-    financeData.cashFlow.projectedInflows
-  );
-
-  setInputValue(
-    "projectedInflows",
-    financeData.cashFlow.projectedInflows
-  );
-
-  setInputValue(
-    "projected-outflows",
-    financeData.cashFlow.projectedOutflows
-  );
-
-  setInputValue(
-    "projectedOutflows",
-    financeData.cashFlow.projectedOutflows
   );
 
   setInputValue(
@@ -1353,72 +1438,54 @@ function restoreForms() {
   );
 
   setInputValue(
-    "profitRevenue",
-    financeData.profitability.revenue
-  );
-
-  setInputValue(
-    "revenue",
-    financeData.profitability.revenue
-  );
-
-  setInputValue(
-    "cost-of-goods",
+    "profit-direct-cost",
     financeData.profitability.costOfGoods
   );
 
   setInputValue(
-    "costOfGoods",
-    financeData.profitability.costOfGoods
-  );
-
-  setInputValue(
-    "cogs",
-    financeData.profitability.costOfGoods
-  );
-
-  setInputValue(
-    "operating-expenses",
+    "profit-operating-cost",
     financeData.profitability.operatingExpenses
   );
 
-  setInputValue(
-    "operatingExpenses",
-    financeData.profitability.operatingExpenses
-  );
 
   document
-    .querySelectorAll('input[type="date"]')
+    .querySelectorAll(
+      'input[type="date"]'
+    )
     .forEach((field) => {
       if (!field.value) {
-        field.value = todayISO();
+        field.value =
+          todayISO();
       }
     });
 }
 
 
 /* =========================================================
-   23. FAQ
+   22. FAQ
    ========================================================= */
 
 function setupFAQ() {
-  const faqButtons =
+  const buttons =
     document.querySelectorAll(
       ".faq-question"
     );
 
-  faqButtons.forEach((button) => {
+  buttons.forEach((button) => {
     const answer =
       button.nextElementSibling;
 
-    if (!answer) return;
+    if (!answer) {
+      return;
+    }
 
     button.setAttribute(
       "aria-expanded",
       "false"
     );
 
-    answer.style.maxHeight = null;
+    answer.style.maxHeight =
+      null;
 
     button.addEventListener(
       "click",
@@ -1428,9 +1495,12 @@ function setupFAQ() {
             "aria-expanded"
           ) === "true";
 
-        faqButtons.forEach(
+
+        buttons.forEach(
           (otherButton) => {
-            if (otherButton === button) {
+            if (
+              otherButton === button
+            ) {
               return;
             }
 
@@ -1449,13 +1519,16 @@ function setupFAQ() {
           }
         );
 
+
         if (isOpen) {
           button.setAttribute(
             "aria-expanded",
             "false"
           );
 
-          answer.style.maxHeight = null;
+          answer.style.maxHeight =
+            null;
+
         } else {
           button.setAttribute(
             "aria-expanded",
@@ -1463,7 +1536,8 @@ function setupFAQ() {
           );
 
           answer.style.maxHeight =
-            answer.scrollHeight + "px";
+            answer.scrollHeight +
+            "px";
         }
       }
     );
@@ -1472,44 +1546,44 @@ function setupFAQ() {
 
 
 /* =========================================================
-   24. CHECKOUT / SELAR
+   23. CHECKOUT / SELAR
    ========================================================= */
 
 function setupCheckout() {
-  const buyButtons =
+  const buttons =
     document.querySelectorAll(
       "#buy-button, .buy-button, [data-buy]"
     );
 
-  const checkoutNotice =
+  const notice =
     $("checkout-notice");
 
-  buyButtons.forEach((button) => {
+
+  buttons.forEach((button) => {
     if (CHECKOUT_URL) {
       button.setAttribute(
         "href",
         CHECKOUT_URL
       );
 
-      button.removeAttribute(
-        "data-checkout-disabled"
-      );
-
       return;
     }
+
 
     button.addEventListener(
       "click",
       (event) => {
         event.preventDefault();
 
-        if (checkoutNotice) {
-          checkoutNotice.hidden = false;
+        if (notice) {
+          notice.hidden =
+            false;
 
-          checkoutNotice.scrollIntoView({
+          notice.scrollIntoView({
             behavior: "smooth",
             block: "center"
           });
+
         } else {
           alert(
             "The Selar checkout link has not been added yet."
@@ -1522,77 +1596,7 @@ function setupCheckout() {
 
 
 /* =========================================================
-   25. GENERIC DOM UPDATE HELPERS
-   ========================================================= */
-
-function updateElement(
-  id,
-  value
-) {
-  const element = $(id);
-
-  if (element) {
-    element.textContent = value;
-  }
-}
-
-
-function updateMany(
-  ids,
-  value
-) {
-  ids.forEach((id) => {
-    updateElement(
-      id,
-      value
-    );
-  });
-}
-
-
-/* =========================================================
-   26. WINDOW RESIZE — REDRAW CHARTS
-   ========================================================= */
-
-let resizeTimer;
-
-window.addEventListener(
-  "resize",
-  () => {
-    clearTimeout(resizeTimer);
-
-    resizeTimer = setTimeout(() => {
-      drawCashFlowChart();
-      drawPerformanceChart();
-    }, 150);
-  }
-);
-
-
-/* =========================================================
-   27. AUTO-SAVE WHEN PAGE IS LEAVING
-   ========================================================= */
-
-window.addEventListener(
-  "beforeunload",
-  () => {
-    try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(financeData)
-      );
-    } catch (error) {
-      console.error(
-        "Auto-save failed:",
-        error
-      );
-    }
-  }
-);
-
-
-/* =========================================================
-   28. OPTIONAL EXPORT — JSON
+   24. EXPORT — JSON
    ========================================================= */
 
 function exportFinancialData() {
@@ -1607,7 +1611,8 @@ function exportFinancialData() {
     new Blob(
       [data],
       {
-        type: "application/json"
+        type:
+          "application/json"
       }
     );
 
@@ -1633,7 +1638,7 @@ function exportFinancialData() {
 
 
 /* =========================================================
-   29. OPTIONAL EXPORT — CSV
+   25. EXPORT — CSV
    ========================================================= */
 
 function exportFinancialCSV() {
@@ -1647,6 +1652,7 @@ function exportFinancialCSV() {
     ]
   ];
 
+
   financeData.income.forEach(
     (item) => {
       rows.push([
@@ -1659,6 +1665,7 @@ function exportFinancialCSV() {
     }
   );
 
+
   financeData.expenses.forEach(
     (item) => {
       rows.push([
@@ -1670,6 +1677,7 @@ function exportFinancialCSV() {
       ]);
     }
   );
+
 
   const csv =
     rows
@@ -1688,13 +1696,16 @@ function exportFinancialCSV() {
       )
       .join("\n");
 
+
   const blob =
     new Blob(
       [csv],
       {
-        type: "text/csv;charset=utf-8;"
+        type:
+          "text/csv;charset=utf-8;"
       }
     );
+
 
   const url =
     URL.createObjectURL(blob);
@@ -1718,35 +1729,68 @@ function exportFinancialCSV() {
 
 
 /* =========================================================
-   30. OPTIONAL EXPORT BUTTONS
+   26. EXPORT BUTTONS
    ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-    document
-      .querySelectorAll(
-        "#export-json, .export-json"
-      )
-      .forEach((button) => {
-        button.addEventListener(
-          "click",
-          exportFinancialData
-        );
-      });
+function setupExportButtons() {
+  document
+    .querySelectorAll(
+      "#export-json, .export-json"
+    )
+    .forEach((button) => {
+      button.addEventListener(
+        "click",
+        exportFinancialData
+      );
+    });
 
-    document
-      .querySelectorAll(
-        "#export-csv, .export-csv"
-      )
-      .forEach((button) => {
-        button.addEventListener(
-          "click",
-          exportFinancialCSV
-        );
-      });
+
+  document
+    .querySelectorAll(
+      "#export-csv, .export-csv"
+    )
+    .forEach((button) => {
+      button.addEventListener(
+        "click",
+        exportFinancialCSV
+      );
+    });
+}
+
+
+/* =========================================================
+   27. AUTO-SAVE
+   ========================================================= */
+
+window.addEventListener(
+  "beforeunload",
+  () => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+          financeData
+        )
+      );
+    } catch (error) {
+      console.error(
+        "Auto-save failed:",
+        error
+      );
+    }
   }
 );
+
+
+/* =========================================================
+   28. OPTIONAL GLOBAL EXPORT ACCESS
+   ========================================================= */
+
+window.exportFinancialData =
+  exportFinancialData;
+
+window.exportFinancialCSV =
+  exportFinancialCSV;
 
 
 /* =========================================================
