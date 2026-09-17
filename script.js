@@ -242,12 +242,32 @@ function showSaveStatus(message) {
   const elements = document.querySelectorAll(
     ".save-status, #save-status, [data-save-status]"
   );
-   function updateElement(id, value) {
+
+  elements.forEach((element) => {
+    element.textContent = message;
+
+    element.classList.add("visible");
+
+    clearTimeout(element._saveTimer);
+
+    element._saveTimer = setTimeout(() => {
+      element.classList.remove("visible");
+    }, 2200);
+  });
+}
+
+function updateElement(id, value) {
   const element = $(id);
 
   if (element) {
     element.textContent = value;
   }
+}
+
+function updateMany(ids, value) {
+  ids.forEach((id) => {
+    updateElement(id, value);
+  });
 }
 
 function updateMany(ids, value) {
