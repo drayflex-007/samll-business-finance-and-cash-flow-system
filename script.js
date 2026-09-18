@@ -228,6 +228,22 @@ function todayISO() {
 }
 
 
+function updateElement(id, value) {
+  const element = $(id);
+
+  if (element) {
+    element.textContent = value;
+  }
+}
+
+
+function updateMany(ids, value) {
+  ids.forEach((id) => {
+    updateElement(id, value);
+  });
+}
+
+
 function escapeHTML(value) {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
